@@ -9,7 +9,7 @@ Additional examples for [TensorFlow Time Series(TFTS)](https://github.com/tensor
 
 - From a CSV file: See "test_input_csv.py".
 
-## Predict a Time Series
+## Predict a Time Series Using AR Model
 
 - From a Numpy Array: See "train_array.py".
   
