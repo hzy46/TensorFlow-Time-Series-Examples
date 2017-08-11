@@ -22,10 +22,13 @@ Additional examples for [TensorFlow Time Series(TFTS)](https://github.com/tensor
 
 ## Predict a Time Series Using LSTM
 
-See "train_lstm.py"
+- Univariate prediction with LSTM("train_lstm.py"):
 
 ![](https://github.com/hzy46/TensorFlow-Time-Series-Examples/blob/master/img/lstm.jpg?raw=true)
 
+- Multivariate prediction with LSTM("train_lstm_multivariate.py"):
+
+![](https://github.com/hzy46/TensorFlow-Time-Series-Examples/blob/master/img/lstm_multivariate.jpg?raw=true)
 
 
 
