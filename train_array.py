@@ -5,7 +5,7 @@ import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from tensorflow.contrib.timeseries.python.timeseries import feature_keys, NumpyReader
+from tensorflow.contrib.timeseries.python.timeseries import  NumpyReader
 
 
 def main(_):
@@ -16,8 +16,8 @@ def main(_):
     plt.savefig('timeseries_y.jpg')
 
     data = {
-        feature_keys.TrainEvalFeatures.TIMES: x,
-        feature_keys.TrainEvalFeatures.VALUES: y,
+        tf.contrib.timeseries.TrainEvalFeatures.TIMES: x,
+        tf.contrib.timeseries.TrainEvalFeatures.VALUES: y,
     }
 
     reader = NumpyReader(data)

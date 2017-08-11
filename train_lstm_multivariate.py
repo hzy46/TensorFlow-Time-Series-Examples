@@ -19,17 +19,14 @@ from __future__ import print_function
 
 from os import path
 
-import numpy as np
+import numpy
 import tensorflow as tf
 
 from tensorflow.contrib.timeseries.python.timeseries import estimators as ts_estimators
 from tensorflow.contrib.timeseries.python.timeseries import model as ts_model
-from tensorflow.contrib.timeseries.python.timeseries import  NumpyReader
-
 import matplotlib
 matplotlib.use("agg")
 import matplotlib.pyplot as plt
-
 
 class _LSTMModel(ts_model.SequentialTimeSeriesModel):
   """A time series model-building example using an RNNCell."""
@@ -156,32 +153,25 @@ class _LSTMModel(ts_model.SequentialTimeSeriesModel):
 
 if __name__ == '__main__':
   tf.logging.set_verbosity(tf.logging.INFO)
-  x = np.array(range(1000))
-  noise = np.random.uniform(-0.2, 0.2, 1000)
-  y = np.sin(np.pi * x / 50 ) + np.cos(np.pi * x / 50) + np.sin(np.pi * x / 25) + noise
-  # y = np.sin(np.pi * x / 100) + x / 200. + noise
-
-  data = {
-      tf.contrib.timeseries.TrainEvalFeatures.TIMES: x,
-      tf.contrib.timeseries.TrainEvalFeatures.VALUES: y,
-  }
-
-  reader = NumpyReader(data)
-
+  csv_file_name = path.join("./data/multivariate_periods.csv")
+  reader = tf.contrib.timeseries.CSVReader(
+      csv_file_name,
+      column_names=((tf.contrib.timeseries.TrainEvalFeatures.TIMES,)
+                    + (tf.contrib.timeseries.TrainEvalFeatures.VALUES,) * 5))
   train_input_fn = tf.contrib.timeseries.RandomWindowInputFn(
-      reader, batch_size=4, window_size=100)
+      reader, batch_size=4, window_size=32)
 
   estimator = ts_estimators.TimeSeriesRegressor(
-      model=_LSTMModel(num_features=1, num_units=128),
+      model=_LSTMModel(num_features=5, num_units=128),
       optimizer=tf.train.AdamOptimizer(0.001))
 
-  estimator.train(input_fn=train_input_fn, steps=2000)
+  estimator.train(input_fn=train_input_fn, steps=200)
   evaluation_input_fn = tf.contrib.timeseries.WholeDatasetInputFn(reader)
   evaluation = estimator.evaluate(input_fn=evaluation_input_fn, steps=1)
   # Predict starting after the evaluation
   (predictions,) = tuple(estimator.predict(
       input_fn=tf.contrib.timeseries.predict_continuation_input_fn(
-          evaluation, steps=200)))
+          evaluation, steps=100)))
 
   observed_times = evaluation["times"][0]
   observed = evaluation["observed"][0, :, :]
@@ -191,7 +181,7 @@ if __name__ == '__main__':
   predicted = predictions["mean"]
 
   plt.figure(figsize=(15, 5))
-  plt.axvline(999, linestyle="dotted", linewidth=4, color='r')
+  plt.axvline(99, linestyle="dotted", linewidth=4, color='r')
   observed_lines = plt.plot(observed_times, observed, label="observation", color="k")
   evaluated_lines = plt.plot(evaluated_times, evaluated, label="evaluation", color="g")
   predicted_lines = plt.plot(predicted_times, predicted, label="prediction", color="r")
