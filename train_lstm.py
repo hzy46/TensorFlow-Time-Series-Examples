@@ -159,7 +159,6 @@ if __name__ == '__main__':
   x = np.array(range(1000))
   noise = np.random.uniform(-0.2, 0.2, 1000)
   y = np.sin(np.pi * x / 50 ) + np.cos(np.pi * x / 50) + np.sin(np.pi * x / 25) + noise
-  # y = np.sin(np.pi * x / 100) + x / 200. + noise
 
   data = {
       tf.contrib.timeseries.TrainEvalFeatures.TIMES: x,
